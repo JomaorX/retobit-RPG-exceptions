@@ -1,5 +1,9 @@
 public class Mage extends Character {
     private int mana;
+    private static final int CAST_SPELL_MANA_COST = 10;
+    private static final int CAST_SPELL_DAMEGE = 20;
+    private static final int HEAL_MANA_COST = 15;
+    private static final int HEAL_AMOUNT = 20;
 
 
     public Mage(String name, int health, int mana) {
@@ -11,40 +15,31 @@ public class Mage extends Character {
         return this.mana;
     }
 
-    public void castSpell(Character target) {
-        if(target == null){
-            throw new InvalidTargetException();
 
-        } else if (!target.isAlive()){
-            throw new CharacterAlreadyDeadException(target.name + " ya está muerto");
+    //Helper para comprobar el maná y consumirlo
+    public void consumeMana (int cost){
+
+        if (this.mana < cost){
+            throw new InsufficientManaException(this.name + " no tiene maná suficiente");
         }
-        else{
-            if (this.mana - 10 >= 0) {
-                this.mana -= 10;
+        this.mana -= cost;
+    }
+
+
+
+    public void castSpell(Character target) {
+
+                super.validateTarget(target);
+                consumeMana(CAST_SPELL_MANA_COST);
                 target.receiveDamage(20);
                 target.status = Status.POISONED;
-            } else {
-                throw new InsufficientManaException(this.name + " no tiene maná suficiente");
-            }
-        }
-
     }
 
     public void heal(Character target) {
-            if(target == null){
-                throw new InvalidTargetException();
-            } else if (!target.isAlive()){
-                throw new CharacterAlreadyDeadException(target.name + " ya está muerto");
-            }
-            else{
-                if (this.mana - 15 >= 0) {
-                    this.mana -= 15;
-                    target.health += 20;
-                } else {
-                    throw new InsufficientManaException(this.name + " no tiene maná suficiente");
-                }
-            }
 
+                    super.validateTarget(target);
+                    consumeMana(HEAL_MANA_COST);
+                    target.health += HEAL_AMOUNT;
     }
 
 }

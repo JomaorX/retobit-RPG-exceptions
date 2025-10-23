@@ -11,13 +11,9 @@ public class Warrior extends Character {
     }
 
     public void performHeavyAttack(Character target) {
-        if (target == null){
-            throw new InvalidTargetException();
-        } else if (!target.isAlive()){
-            throw new CharacterAlreadyDeadException(target.name + " ya está muerto");
-        } else {
+            super.validateTarget(target);
             target.receiveDamage(this.strength);
-        }
+
     }
 
     public void enterBerserkMode() {
